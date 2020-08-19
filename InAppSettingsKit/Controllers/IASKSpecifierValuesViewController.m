@@ -52,6 +52,13 @@
 		IASK_IF_IOS11_OR_GREATER(self.navigationItem.largeTitleDisplayMode = self.title.length ? UINavigationItemLargeTitleDisplayModeAutomatic : UINavigationItemLargeTitleDisplayModeNever;);
     }
     
+    // PC ADD - done button
+    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                target:self
+                                                                                action:@selector(dismiss:)];
+    self.navigationItem.rightBarButtonItem = buttonItem;
+    // end PC ADD
+                                   
     if (self.tableView) {
 		self.selection.tableView = self.tableView;
 		[self.tableView reloadData];
@@ -122,11 +129,24 @@
         }
     }
     @catch (NSException * e) {}
+
+    // PC ADD
+    if (self.delegate && [self.delegate conformsToProtocol:@protocol(IASKSpecifierValuesDelegate)]) {
+        [self.delegate specifierValuesUpdateTableCell:cell atRow:indexPath.row forSpecifier:_currentSpecifier];
+    }
+
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.selection selectRowAtIndexPath:indexPath];
+}
+
+// PC Added
+- (void)dismiss:(id)sender {
+	if (self.delegate && [self.delegate conformsToProtocol:@protocol(IASKSpecifierValuesDelegate)]) {
+		[self.delegate specifierValuesViewControllerDidEnd:self];
+	}
 }
 
 @end

@@ -298,6 +298,16 @@
     return [_multipleValuesDict objectForKey:kIASKShortTitles];
 }
 
+// PC ADD -
+- (NSString*)cellImageAtIndex:(NSInteger)index {
+    NSString *imageName = self.multipleIconNames[index];
+    if(imageName.length == 0) {
+        return @"";
+    }
+    return imageName;
+}
+// PC Add - End
+
 - (NSString*)file {
     return [_specifierDict objectForKey:kIASKFile];
 }

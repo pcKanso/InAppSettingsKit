@@ -170,6 +170,9 @@ CGRect IASKCGRectSwap(CGRect rect);
 	_showCreditsFooter = YES; // display credits for InAppSettingsKit creators
     self.clearsSelectionOnViewWillAppear = false;
 	self.rowHeights = [NSMutableDictionary dictionary];
+	
+	 // PC Add
+    _hideStatusBar = NO;
 }
 
 - (void)viewDidLoad {
@@ -189,6 +192,11 @@ CGRect IASKCGRectSwap(CGRect rect);
 	if (!self.title) {
 		self.title = NSLocalizedString(@"Settings", @"");
 	}
+}
+
+// PC Add
+- (BOOL)prefersStatusBarHidden {
+    return self.hideStatusBar;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -222,6 +230,13 @@ CGRect IASKCGRectSwap(CGRect rect);
 		IASKSettingsStoreUserDefaults *udSettingsStore = (id)self.settingsStore;
 		[dc addObserver:self selector:@selector(userDefaultsDidChange) name:NSUserDefaultsDidChangeNotification object:udSettingsStore.defaults];
 		[self userDefaultsDidChange]; // force update in case of changes while we were hidden
+        
+        // PC ADD - Done button
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(dismiss:)
+                                                     name:kIASKDoneSelectedFromValuesController
+                                                   object:nil];
+
 	}
 }
 
@@ -362,10 +377,16 @@ CGRect IASKCGRectSwap(CGRect rect);
 				if (showIndexPaths.count) {
 					[self.tableView insertRowsAtIndexPaths:showIndexPaths withRowAnimation:rowAnimation];
 				}
+				// PC Add
+				[self createSelections];
+				
 				[self.tableView endUpdates];
 			}
 		} else {
 			self.settingsReader.hiddenKeys = theHiddenKeys;
+			// PC Add
+			[self createSelections];
+			
 			if (!_reloadDisabled) [self.tableView reloadData];
 		}
 	}
@@ -450,6 +471,23 @@ CGRect IASKCGRectSwap(CGRect rect);
 	}
 	datePicker.editing = NO;
 }
+
+// PC ADD - pass along the delegate action
+#pragma mark -
+#pragma mark IASKSpecifierValuesViewControllerDelegate Functions
+
+- (void)specifierValuesViewControllerDidEnd:(IASKSpecifierValuesViewController*)sender
+{
+    [self dismiss:sender];
+}
+
+- (void)specifierValuesUpdateTableCell:(UITableViewCell *)cell atRow:(NSInteger)row forSpecifier:(IASKSpecifier *)specifier
+{
+    if ([self.delegate respondsToSelector:@selector(updateMultiValueTableCell:atRow:forSpecifier:)]) {
+        [self.delegate updateMultiValueTableCell:cell atRow:row forSpecifier:specifier];
+    }
+}
+// PC ADD - end
 
 #pragma mark -
 #pragma mark UITableView Functions
@@ -769,6 +807,9 @@ CGRect IASKCGRectSwap(CGRect rect);
 		NSInteger index = [specifier.multipleValues indexOfObject:(id)specifier.radioGroupValue];
 		cell.textLabel.text = [self.settingsReader titleForId:specifier.multipleTitles[index]];
 		[_selections[indexPath.section] updateSelectionInCell:cell indexPath:indexPath];
+		// PC Add - Radio Group Specifier images
+		NSString* imageName = [specifier cellImageAtIndex:index];
+		cell.imageView.image = [UIImage imageNamed:imageName];
 	} else if ([specifier.type isEqualToString:kIASKDatePickerControl]) {
 		IASKDatePickerViewCell *datePickerCell = (id)cell;
 		datePickerCell.datePicker.specifier = specifier;
@@ -786,8 +827,11 @@ CGRect IASKCGRectSwap(CGRect rect);
 		cell.textLabel.text = title;
 	}
     
-	cell.imageView.image = specifier.cellImage;
-	cell.imageView.highlightedImage = specifier.highlightedCellImage;
+	// PC ADD
+	if (![specifier.type isEqualToString:kIASKPSRadioGroupSpecifier]) {
+		cell.imageView.image = specifier.cellImage;
+		cell.imageView.highlightedImage = specifier.highlightedCellImage;
+	}
     
 	if (![@[kIASKPSMultiValueSpecifier, kIASKPSTitleValueSpecifier, kIASKPSTextFieldSpecifier, kIASKTextViewSpecifier] containsObject:specifier.type]) {
 		cell.textLabel.textAlignment = specifier.textAlignment;
@@ -843,6 +887,9 @@ CGRect IASKCGRectSwap(CGRect rect);
 
 		[self presentChildViewController:targetViewController specifier:specifier indexPath:indexPath];
 		
+		// PC Add
+		targetViewController.delegate = self;
+
 	} else if ([specifier.type isEqualToString:kIASKPSToggleSwitchSpecifier]) {
 		UITableViewCell *cell =	[tableView cellForRowAtIndexPath:indexPath];
 		BOOL on = cell.accessoryType == UITableViewCellAccessoryCheckmark;
@@ -962,6 +1009,21 @@ CGRect IASKCGRectSwap(CGRect rect);
 			} else if ([specifier localizedObjectForKey:kIASKMailComposeBody]) {
 				[mailViewController setMessageBody:(id)[specifier localizedObjectForKey:kIASKMailComposeBody] isHTML:isHTML];
 			}
+			// PC ADD
+            if ([self.delegate respondsToSelector:@selector(settingsViewController:mailAttachmentFilenameForSpecifier:)]) {
+              
+                NSString *filename = [self.delegate settingsViewController:self  mailAttachmentFilenameForSpecifier:specifier];
+                if (filename != nil) {
+                    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+                    NSString *documentsDirectory = [paths objectAtIndex:0];
+                    NSString *txtFilePath = [documentsDirectory stringByAppendingPathComponent:filename];
+                    if ([[NSFileManager defaultManager] fileExistsAtPath:txtFilePath]){
+                        NSData *noteData = [NSData dataWithContentsOfFile:txtFilePath];
+                        [mailViewController addAttachmentData:noteData mimeType:@"text/plain" fileName:filename];
+                    }
+              }
+            }
+			// PC ADD - END
 		}
 		
 		if ([self.delegate respondsToSelector:@selector(settingsViewController:shouldPresentMailComposeViewController:forSpecifier:)]) {

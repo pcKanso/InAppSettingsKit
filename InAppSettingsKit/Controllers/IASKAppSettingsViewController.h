@@ -122,6 +122,9 @@ NS_ASSUME_NONNULL_BEGIN
  - (void)settingsViewController:(IASKAppSettingsViewController*)settingsViewController
    didSelectCustomViewSpecifier:(IASKSpecifier*)specifier;
 
+// PC ADD
+- (void)updateMultiValueTableCell:(UITableViewCell*)cell atRow:(NSInteger)row forSpecifier:(IASKSpecifier*)specifier;
+
 #pragma mark - Mail Composition
 /** Tells the delegate that the specified custom view (`IASKCustomView`) element is now selected.
  @param settingsViewController the settingsViewController
@@ -133,6 +136,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)settingsViewController:(UITableViewController<IASKViewController>*)settingsViewController
 shouldPresentMailComposeViewController:(MFMailComposeViewController*)mailComposeViewController
 				  forSpecifier:(IASKSpecifier*) specifier;
+
+// PC ADD
+- (NSString*) settingsViewController:(id<IASKViewController>)settingsViewController
+         mailAttachmentFilenameForSpecifier:(IASKSpecifier*) specifier;
 
 /** Tells the delegate that the user wants to dismiss the mail composition view.
  @param settingsViewController the settingsViewController
@@ -252,6 +259,9 @@ typedef NS_ENUM(NSUInteger, IASKValidationResult) {
 
 /// Sets the same parameter on the tableView of the root and all child view controllers
 @property (nonatomic) IBInspectable BOOL cellLayoutMarginsFollowReadableWidth;
+
+// PC ADD
+@property (nonatomic) BOOL hideStatusBar;
 
 /// Synchronizes the settings store, e.g. calls `-[NSUserDefaults synchronize]` in case of the default store.
 - (void)synchronizeSettings;

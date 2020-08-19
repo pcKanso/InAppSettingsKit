@@ -144,6 +144,10 @@ typedef NS_ENUM(NSUInteger, IASKToggleStyle) {
 @property (nullable, nonatomic, strong, readonly) NSArray *multipleTitles;
 @property (nullable, nonatomic, strong, readonly) NSArray *multipleIconNames;
 @property (nonatomic, readonly) BOOL displaySortedByTitle;
+
+// PC ADD
+- (NSString*)cellImageAtIndex:(NSInteger)index;
+
 - (void)setMultipleValuesDictValues:(NSArray*)values titles:(NSArray*)titles;
 - (void)sortIfNeeded;
 

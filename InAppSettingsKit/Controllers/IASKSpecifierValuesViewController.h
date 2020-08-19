@@ -17,8 +17,25 @@
 #import <InAppSettingsKit/IASKSpecifier.h>
 #import <InAppSettingsKit/IASKViewController.h>
 
+// PC ADD
+@class IASKSpecifier;
+@class IASKSettingsReader;
+@class IASKSpecifierValuesViewController;
+
+@protocol IASKSpecifierValuesDelegate
+@optional
+
+- (void)specifierValuesViewControllerDidEnd:(IASKSpecifierValuesViewController*_Nonnull)sender;
+- (void)specifierValuesUpdateTableCell:(UITableViewCell*_Nonnull)cell atRow:(NSInteger)row forSpecifier:(IASKSpecifier*_Nonnull)specifier;
+
+@end
+// PC ADD - end
+
 @interface IASKSpecifierValuesViewController : UITableViewController <IASKViewController>
 
 - (nonnull id)initWithSpecifier:(nonnull IASKSpecifier*)specifier;
+
+// PC ADD
+@property (nonatomic, assign) IBOutlet id _Nullable delegate;
 
 @end

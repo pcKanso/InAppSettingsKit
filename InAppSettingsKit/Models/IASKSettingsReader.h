@@ -148,6 +148,9 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSString * const IASKSettingChangedNotification;
 #define kIASKAppSettingChanged                IASKSettingChangedNotification
 
+// PC ADD - Done button
+#define kIASKDoneSelectedFromValuesController @"kDoneSelectedFromValuesController"
+
 #define kIASKSectionHeaderIndex               0
 
 #define kIASKSliderImageGap                   10
