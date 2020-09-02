@@ -301,9 +301,6 @@
 // PC ADD -
 - (NSString*)cellImageAtIndex:(NSInteger)index {
     NSString *imageName = self.multipleIconNames[index];
-    if(imageName.length == 0) {
-        return @"";
-    }
     return imageName;
 }
 // PC Add - End
@@ -465,7 +462,7 @@
 
 - (UIImage *)cellImage {
     NSString *imageName = [_specifierDict objectForKey:kIASKCellImage];
-    if( imageName.length == 0 )
+	if( imageName.length == 0 )
         return nil;
     
     return [UIImage imageNamed:imageName];

@@ -809,7 +809,9 @@ CGRect IASKCGRectSwap(CGRect rect);
 		[_selections[indexPath.section] updateSelectionInCell:cell indexPath:indexPath];
 		// PC Add - Radio Group Specifier images
 		NSString* imageName = [specifier cellImageAtIndex:index];
-		cell.imageView.image = [UIImage imageNamed:imageName];
+		if (imageName.length > 0) {
+			cell.imageView.image = [UIImage imageNamed:imageName];
+		}
 	} else if ([specifier.type isEqualToString:kIASKDatePickerControl]) {
 		IASKDatePickerViewCell *datePickerCell = (id)cell;
 		datePickerCell.datePicker.specifier = specifier;
