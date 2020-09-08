@@ -211,6 +211,10 @@ typedef NS_ENUM(NSUInteger, IASKValidationResult) {
   childPaneIsValidForSpecifier:(IASKSpecifier*)specifier
 			 contentDictionary:(NSMutableDictionary*)contentDictionary;
 
+- (void)settingsViewController:(IASKAppSettingsViewController*)settingsViewController
+didSelectListGroupForSpecifier:(IASKSpecifier*)specifier
+             contentDictionary:(NSMutableDictionary*)contentDictionary;
+
 #pragma mark - Date Picker
 /// Implement this if you store the date/time in a custom format other than as `NSDate` object. Called when the user starts editing a date/time by selecting the title cell above the date/time picker.
 - (NSDate*)settingsViewController:(IASKAppSettingsViewController*)settingsViewController

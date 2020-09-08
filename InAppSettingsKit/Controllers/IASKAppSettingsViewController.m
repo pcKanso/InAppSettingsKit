@@ -975,7 +975,7 @@ CGRect IASKCGRectSwap(CGRect rect);
         _reloadDisabled = NO;
 		
 		if ([specifier.parentSpecifier.type isEqualToString:kIASKListGroupSpecifier]) {
-			[tableView deselectRowAtIndexPath:indexPath animated:YES];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
 		}
 		[self presentChildViewController:targetViewController specifier:specifier indexPath:indexPath];
         
@@ -1099,8 +1099,11 @@ CGRect IASKCGRectSwap(CGRect rect);
 			}
 		}
 		IASKSettingsStoreInMemory *inMemoryStore = [[IASKSettingsStoreInMemory alloc] initWithDictionary:itemDict];
+        if ([self.delegate respondsToSelector:@selector(settingsViewController:didSelectListGroupForSpecifier:contentDictionary:)]) {
+            [self.delegate settingsViewController:self didSelectListGroupForSpecifier:specifier contentDictionary:inMemoryStore.dictionary];
+        }
 		targetViewController.settingsStore = inMemoryStore;
-		[targetViewController.settingsReader applyDefaultsToStore];
+		[targetViewController.settingsReader applyDefaultsToStore];        
 		UINavigationController *navCtrl = [[UINavigationController alloc] initWithRootViewController:targetViewController];
 		navCtrl.modalPresentationStyle = self.navigationController.modalPresentationStyle;
 		navCtrl.popoverPresentationController.sourceView = [self.tableView cellForRowAtIndexPath:indexPath];
