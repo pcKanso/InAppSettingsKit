@@ -150,6 +150,7 @@ extern NSString * const IASKSettingChangedNotification;
 
 // PC ADD - Done button
 #define kIASKDoneSelectedFromValuesController @"kDoneSelectedFromValuesController"
+#define kIASKShowDoneButton                   @"ShowDoneButton"
 
 #define kIASKSectionHeaderIndex               0
 

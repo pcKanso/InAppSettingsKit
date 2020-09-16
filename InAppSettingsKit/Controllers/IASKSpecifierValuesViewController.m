@@ -53,10 +53,12 @@
     }
     
     // PC ADD - done button
-    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                target:self
-                                                                                action:@selector(dismiss:)];
-    self.navigationItem.rightBarButtonItem = buttonItem;
+    if ([[self.currentSpecifier.specifierDict objectForKey:kIASKShowDoneButton] boolValue]) {
+        UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                    target:self
+                                                                                    action:@selector(dismiss:)];
+        self.navigationItem.rightBarButtonItem = buttonItem;
+    }
     // end PC ADD
                                    
     if (self.tableView) {
