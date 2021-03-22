@@ -124,6 +124,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // PC ADD
 - (void)updateMultiValueTableCell:(UITableViewCell*)cell atRow:(NSInteger)row forSpecifier:(IASKSpecifier*)specifier;
+- (void)doneEditing:(IASKAppSettingsViewController*)settingsViewController forSpecifier:(IASKSpecifier*)specifier
+  contentDictionary:(NSMutableDictionary*)contentDictionary;
 
 #pragma mark - Mail Composition
 /** Tells the delegate that the specified custom view (`IASKCustomView`) element is now selected.

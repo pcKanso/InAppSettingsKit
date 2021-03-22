@@ -1124,7 +1124,11 @@ CGRect IASKCGRectSwap(CGRect rect);
 					targetViewController.navigationItem.rightBarButtonItem.enabled = valid;
 				}
 				return;
-			}
+            } else {
+                if ([weakSelf.delegate respondsToSelector:@selector(doneEditing:forSpecifier:contentDictionary:)]) {
+                    [weakSelf.delegate doneEditing:weakSelf forSpecifier:specifier contentDictionary:inMemoryStore.dictionary];
+                }
+            }
 			if ([targetViewController respondsToSelector:@selector(currentFirstResponder)]) {
 				[targetViewController.currentFirstResponder resignFirstResponder];
 			}
@@ -1289,7 +1293,7 @@ CGRect IASKCGRectSwap(CGRect rect);
 }
 
 - (void)addListItemDone:(id)sender {
-	self.childPaneHandler(YES);
+    self.childPaneHandler(YES);
 	self.childPaneHandler = nil;
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
